@@ -220,7 +220,7 @@
             <div class="itsmh-body">
                 <div class="itsmh-status">
                     <span class="itsmh-status-dot" aria-hidden="true"></span>
-                    <span>Hazir</span>
+                    <span>Hazır</span>
                 </div>
                 <label class="itsmh-field">
                     <span>Group</span>
@@ -527,7 +527,7 @@
 
     async function setSelect2Field(control, value) {
         closeOpenDropdown();
-        await sleep(120);
+        await sleep(60);
 
         if (!openSelect2(control)) {
             clickSelect2Sibling(control);
@@ -539,7 +539,7 @@
         }
 
         clearInputValue(searchInput);
-        await sleep(80);
+        await sleep(40);
         typeSearchValue(searchInput, value);
 
         const option = await waitForOption(value, 8000);
@@ -549,7 +549,7 @@
         }
 
         clickElement(option);
-        await sleep(500);
+        await sleep(250);
         return true;
     }
 
@@ -679,7 +679,7 @@
         }
 
         if (setNativeSelect(control, value)) {
-            await sleep(250);
+            await sleep(125);
             return true;
         }
 
@@ -716,7 +716,7 @@
             } else if (statusText) {
                 statusText.textContent = `${field.label} tamam`;
             }
-            await sleep(field.required ? 900 : 600);
+            await sleep(field.required ? 450 : 300);
         }
 
         return { missing };
