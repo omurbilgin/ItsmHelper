@@ -6,7 +6,7 @@
 // @author       ...
 // @match        Paste the ITSM URL here.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=79.60
-// @resource     itsmHelperCss file:///C:/Users/omur.bilgin/Documents/GitHub/ItsmHelper/style.css
+// @resource     itsmHelperCss https://cdn.jsdelivr.net/gh/omurbilgin/ItsmHelper@latest/style.css
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @grant        unsafeWindow
@@ -164,7 +164,7 @@
                 GM_addStyle(css);
             }
         } catch (error) {
-            console.warn('ITSM Helper CSS could not be loaded.', error);
+            void error;
         }
     }
 
@@ -287,7 +287,7 @@
 
         updateButton.addEventListener('click', async () => {
             updateButton.disabled = true;
-            statusText.textContent = 'Uygulaniyor...';
+            statusText.textContent = 'Uygulanıyor...';
 
             try {
                 const selectedTeam = panel.querySelector('[data-itsmh-team]').value;
@@ -300,7 +300,7 @@
 
                 statusText.textContent = result.missing.length
                     ? `Eksik: ${result.missing.join(', ')}`
-                    : 'Tamamlandi';
+                    : 'Tamamlandı';
             } catch (error) {
                 console.error('ITSM Helper update failed.', error);
                 statusText.textContent = 'Hata: console kontrol et';
@@ -441,7 +441,7 @@
             try {
                 pageJQuery(element).trigger('input').trigger('change').trigger('blur');
             } catch (error) {
-                console.warn('ITSM Helper could not trigger jQuery events.', error);
+                void error;
             }
         }
     }
@@ -495,7 +495,7 @@
             Object.defineProperty(event, 'keyCode', { get: () => code });
             Object.defineProperty(event, 'which', { get: () => code });
         } catch (error) {
-            console.warn('ITSM Helper could not patch keyboard event code.', error);
+            void error;
         }
         element.dispatchEvent(event);
     }
@@ -520,7 +520,7 @@
             }
             return false;
         } catch (error) {
-            console.warn('ITSM Helper could not open Select2 through page jQuery.', error);
+            void error;
             return false;
         }
     }
@@ -535,7 +535,6 @@
 
         const searchInput = await waitForSelect2SearchInput(3000);
         if (!searchInput) {
-            console.warn('ITSM Helper: Select2 search input not found.', control);
             return false;
         }
 
@@ -545,12 +544,10 @@
 
         const option = await waitForOption(value, 8000);
         if (!option) {
-            console.warn(`ITSM Helper: option not found for "${value}".`, visibleOptionTexts());
             closeOpenDropdown();
             return false;
         }
 
-        console.debug(`ITSM Helper: selected option "${normalizeText(option.textContent)}" for "${value}".`, option);
         clickElement(option);
         await sleep(500);
         return true;
@@ -649,10 +646,6 @@
         ].join(','))).filter(isVisible);
     }
 
-    function visibleOptionTexts() {
-        return getVisibleOptions().map((option) => normalizeText(option.textContent)).filter(Boolean);
-    }
-
     function clickElement(element) {
         const view = getElementView(element);
         ['mousedown', 'mouseup', 'click'].forEach((eventName) => {
@@ -673,7 +666,7 @@
             try {
                 pageJQuery(document).trigger('mousedown').trigger('mouseup').trigger('click');
             } catch (error) {
-                console.warn('ITSM Helper could not close dropdown through jQuery.', error);
+                void error;
             }
         }
     }
@@ -682,11 +675,8 @@
         const control = getFieldControl(field);
 
         if (!control) {
-            console.warn(`ITSM Helper: field control not found for "${field.label}".`);
             return false;
         }
-
-        console.debug(`ITSM Helper: applying "${value}" to "${field.label}".`, control);
 
         if (setNativeSelect(control, value)) {
             await sleep(250);
@@ -713,7 +703,7 @@
 
         for (const [field, value] of fields) {
             if (statusText) {
-                statusText.textContent = `${field.label} seciliyor...`;
+                statusText.textContent = `${field.label} seçiliyor...`;
             }
 
             const applied = await setRequestField(field, value);
@@ -730,47 +720,6 @@
         }
 
         return { missing };
-    }
-
-    function installDebugHelper() {
-        try {
-            const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
-            targetWindow.itsmHelperDebug = function itsmHelperDebug() {
-                const root = document.querySelector('#req-form') || document.querySelector('#form-container') || document;
-                const items = Array.from(root.querySelectorAll('label, .control-label, [data-label], [aria-label], [title], [data-name], [data-field], [data-field-name], select, input, textarea'))
-                    .map((element) => ({
-                        tag: element.tagName.toLowerCase(),
-                        id: element.id || '',
-                        name: element.getAttribute('name') || '',
-                        dataName: element.getAttribute('data-name') || '',
-                        dataField: element.getAttribute('data-field') || element.getAttribute('data-field-name') || '',
-                        ariaLabel: element.getAttribute('aria-label') || '',
-                        title: element.getAttribute('title') || '',
-                        text: normalizeText(element.textContent).slice(0, 80),
-                        visible: isVisible(element)
-                    }))
-                    .filter((item) => item.id || item.name || item.dataName || item.dataField || item.ariaLabel || item.title || item.text);
-
-                console.table(items);
-                return items;
-            };
-
-            targetWindow.itsmHelperOptions = function itsmHelperOptions() {
-                const options = Array.from(document.querySelectorAll('[role="option"], .select2-result-label, .select2-results li, .dropdown-menu li, .ui-menu-item, li, a'))
-                    .filter(isVisible)
-                    .map((element) => ({
-                        tag: element.tagName.toLowerCase(),
-                        className: element.className || '',
-                        text: normalizeText(element.textContent)
-                    }))
-                    .filter((item) => item.text);
-
-                console.table(options);
-                return options;
-            };
-        } catch (error) {
-            console.warn('ITSM Helper debug helper could not be installed.', error);
-        }
     }
 
     function waitForRequestForm() {
@@ -799,7 +748,6 @@
 
     async function init() {
         loadCss();
-        installDebugHelper();
         await waitForRequestForm();
         createWindow();
     }
