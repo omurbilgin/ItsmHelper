@@ -95,7 +95,7 @@
             requestType: 'Event'
         },
         'Microsoft': {
-            group: 'Microsoft Platform Team',
+            group: 'Microsoft Platforms Team',
             category: 'ManagedOS',
             serviceCategory: 'Microsoft Platform Hizmetleri',
             level: 'L1',
@@ -104,7 +104,7 @@
         'Database': {
             group: 'Database Team',
             category: 'Database Services',
-            serviceCategory: 'Database Management',
+            serviceCategory: 'DB - Troubleshooting Services',
             level: 'L1',
             requestType: 'Event'
         }
@@ -296,14 +296,14 @@
                 const selectedStatus = panel.querySelector('[data-itsmh-status]').value;
                 const technicianInput = rosterInputs.find((input) => input.getAttribute('data-itsmh-roster') === selectedTeam);
                 const technician = technicianInput ? technicianInput.value : '';
-                const result = await withTimeout(applyRequestPreset(selectedTeam, selectedScope, selectedRequestType, selectedStatus, technician.trim(), statusText), 90000);
+                const result = await withTimeout(applyRequestPreset(selectedTeam, selectedScope, selectedRequestType, selectedStatus, technician.trim(), statusText), 10000);
 
                 statusText.textContent = result.missing.length
                     ? `Eksik: ${result.missing.join(', ')}`
                     : 'Tamamlandı';
             } catch (error) {
                 console.error('ITSM Helper update failed.', error);
-                statusText.textContent = 'Hata: console kontrol et';
+                statusText.textContent = 'Hata: Konsol kontrol et';
             } finally {
                 updateButton.disabled = false;
             }
@@ -550,6 +550,7 @@
 
         clickElement(option);
         await sleep(250);
+        closeOpenDropdown();
         return true;
     }
 
@@ -664,11 +665,26 @@
         const pageJQuery = getPageJQuery();
         if (pageJQuery) {
             try {
-                pageJQuery(document).trigger('mousedown').trigger('mouseup').trigger('click');
+                pageJQuery('.select2-offscreen').each(function closeSelect2Control() {
+                    const $control = pageJQuery(this);
+                    if (typeof $control.select2 === 'function' && $control.data('select2')) {
+                        $control.select2('close');
+                    }
+                });
+                pageJQuery(document.body).trigger('mousedown').trigger('mouseup').trigger('click');
             } catch (error) {
                 void error;
             }
         }
+
+        const view = getElementView(document.body);
+        ['mousedown', 'mouseup', 'click'].forEach((eventName) => {
+            document.body.dispatchEvent(new view.MouseEvent(eventName, { bubbles: true, cancelable: true, view }));
+        });
+
+        document.querySelectorAll('.select2-drop-mask, .select2-drop-active').forEach((element) => {
+            element.style.display = 'none';
+        });
     }
 
     async function setRequestField(field, value) {
@@ -707,14 +723,14 @@
             }
 
             const applied = await setRequestField(field, value);
+            closeOpenDropdown();
             if (!applied) {
                 missing.push(field.label);
-                closeOpenDropdown();
                 if (field.required) {
                     break;
                 }
             } else if (statusText) {
-                statusText.textContent = `${field.label} tamam`;
+                statusText.textContent = `${field.label} tamamlandı`;
             }
             await sleep(field.required ? 450 : 300);
         }
