@@ -1,0 +1,207 @@
+.itsmh-window {
+    position: fixed;
+    top: 84px;
+    right: 24px;
+    z-index: 2147483000;
+    width: 320px;
+    max-width: calc(100vw - 24px);
+    overflow: hidden;
+    color: #1f2937;
+    background: #ffffff;
+    border: 1px solid #cfd7df;
+    border-radius: 8px;
+    box-shadow: 0 16px 42px rgba(15, 23, 42, 0.22);
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 13px;
+}
+
+.itsmh-window,
+.itsmh-window * {
+    box-sizing: border-box;
+}
+
+.itsmh-window.is-dragging {
+    user-select: none;
+}
+
+.itsmh-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 42px;
+    padding: 8px 10px 8px 12px;
+    color: #ffffff;
+    background: #25313b;
+    cursor: move;
+}
+
+.itsmh-brand {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 8px;
+}
+
+.itsmh-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    border-radius: 6px;
+    color: #25313b;
+    background: #8fd6bd;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.itsmh-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.itsmh-icon-button {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
+    padding: 0;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.itsmh-icon-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.itsmh-body {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+}
+
+.itsmh-window.is-collapsed .itsmh-body {
+    display: none;
+}
+
+.itsmh-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    padding: 8px 10px;
+    color: #425466;
+    background: #f5f7f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.itsmh-status-dot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: #2fa36b;
+}
+
+.itsmh-field {
+    display: grid;
+    gap: 6px;
+    color: #425466;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.itsmh-select {
+    width: 100%;
+    min-height: 34px;
+    padding: 7px 10px;
+    color: #1f2937;
+    background: #ffffff;
+    border: 1px solid #cfd7df;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.itsmh-select:focus {
+    outline: 2px solid rgba(47, 163, 107, 0.25);
+    border-color: #2fa36b;
+}
+
+.itsmh-roster {
+    display: grid;
+    gap: 8px;
+    max-height: 220px;
+    overflow: auto;
+    padding: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.itsmh-roster-title {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.itsmh-roster-row {
+    display: grid;
+    gap: 5px;
+    color: #425466;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.itsmh-input {
+    width: 100%;
+    min-height: 32px;
+    padding: 6px 9px;
+    color: #1f2937;
+    background: #ffffff;
+    border: 1px solid #cfd7df;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.itsmh-input:focus {
+    outline: 2px solid rgba(47, 163, 107, 0.25);
+    border-color: #2fa36b;
+}
+
+.itsmh-primary {
+    width: 100%;
+    min-height: 36px;
+    padding: 8px 12px;
+    color: #ffffff;
+    background: #2f6f62;
+    border: 1px solid #285f54;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.itsmh-primary:hover {
+    background: #285f54;
+}
+
+.itsmh-primary:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+    .itsmh-window {
+        top: 64px;
+        right: 12px;
+        width: calc(100vw - 24px);
+    }
+}
